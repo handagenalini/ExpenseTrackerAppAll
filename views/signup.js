@@ -16,6 +16,12 @@ async function signup(e){
     // console.log(data)
 
         console.log('this is script axios');
+        console.log(response)
+        // if(response.status===500){
+        
+        //     document.body.innerHTML += `<div style="color:red;">${response.data.err} user alredy exist <div>`;
+
+        // }
         if(response.status === 201){
             
             window.location.href = "./login.html" // change the page on successful login

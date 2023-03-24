@@ -6,4 +6,5 @@ router.get('/',signupcontroller.getsignuppage)
 
 
 router.post('/add',signupcontroller.postsignup)
+router.post(`/login`,signupcontroller.login)
 module.exports=router
