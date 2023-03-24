@@ -1,4 +1,4 @@
-function login(e) {
+async function login(e) {
     e.preventDefault();
     // console.log(e.target.name);
     const form = new FormData(e.target);
@@ -10,14 +10,14 @@ function login(e) {
 
     }
     console.log(loginDetails)
-    axios.post('http://localhost:3000/login',loginDetails).then(response => {
+    await axios.post('http://localhost:3000/login',loginDetails).then(response => {
         console.log('index1')
         if(response.status === 200){
             console.log('index')
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('userDetails', JSON.stringify(response.data.user))
             alert('login done')
-            window.location.href = "/index.html" // change the page on successful login
+            window.location.href = "./expense.html" // change the page on successful login
         } else {
             throw new Error('Failed to login')
         }
