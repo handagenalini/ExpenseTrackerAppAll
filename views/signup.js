@@ -23,6 +23,7 @@ async function signup(e){
 
         // }
         if(response.status === 201){
+            alert('signup done')
             
             window.location.href = "./login.html" // change the page on successful login
         } else {

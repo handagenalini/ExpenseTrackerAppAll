@@ -16,18 +16,23 @@ exports.postsignup=async(req,res,next)=>{
         throw new Error('please enter email')
      }
      const email=req.body.email
+     const name=req.body.name
+ 
+    const password=req.body.password
+
     //  User.findAll({ where : { email }}).then(user => {
     //     if(user.length>0){
     //       return  res.status(506).json({err:'user already exist'})
     //     }
     //  })
-    const name=req.body.name
- 
-    const password=req.body.password
+    const saltrounds=10
+    bcrypt.hash(password,saltrounds,async(err,hash)=>{
+   
     const user=await User.create({
-        name:name,email:email,password:password
+        name:name,email:email,password:hash
     })
-    return res.status(201).json({newUser:user})
+    return res.status(201).json({message:'user created successfully'})
+})
     }catch(err){
         console.log(err)
         return res.status(500).json({error:err})
@@ -42,13 +47,21 @@ exports.login = (req, res) => {
     console.log(password);
     User.findAll({ where : { email }}).then(user => {
         if(user.length > 0){
-            if(user[0].password===password) {
+            bcrypt.compare(password,user[0].password,(err,result)=> {
+                if(err){
+                    res.status(500).json({message:'somwthing went wrong'})
+                }
+                if(result){
+                
                 res.json({success: true, message: 'Successfully Logged In'})
+                }
                 // Send JWT
-                } else {
+        
+                 else {
                 // response is OutgoingMessage object that server response http request
                 return res.status(401).json({success: false, message: 'passwords do not match'});
                 }
+            })
             
         } else {
             return res.status(404).json({success: false, message: 'passwords do not match'})
