@@ -13,8 +13,14 @@ app.use(bodyParser.json({ extended: false}));
 
 app.use(cors())
 
-const routes=require('./route/user')
+const routes=require('./route/user');
+const Expense = require('./models/expense');
 app.use(routes)
+
+
+User.hasMany(Expense)
+Expense.belongsTo(User)
+
 sequelize.sync().then(()=>{
 // console.log(result)
     app.listen(3000)
