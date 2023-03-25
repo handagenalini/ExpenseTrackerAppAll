@@ -21,7 +21,8 @@ const category=req.body.category
 const data=await Expense.create({
     amount:amount,
     description:description,
-    category:category
+    category:category,
+    userId:req.user.id
 
 })
 res.status(201).json({newExpense:data})
@@ -33,7 +34,7 @@ res.status(500).json({error:err})
 exports.getexpense=async(req,res,next)=>{
     try{
         
-        const expense=await Expense.findAll()
+        const expense=await Expense.findAll({where:{userId:req.user.id}})
         console.log(expense)
         res.status(200).json({allExpense:expense})
     }catch(err){
@@ -55,7 +56,7 @@ exports.delete=async(req,res,next)=>{
         }
         const eid=req.params.id
         console.log(eid)
-        const result=await Expense.destroy({where:{id:eid}})
+        const result=await Expense.destroy({where:{id:eid,userId:req.user.id}})
         console.log(result)
 
         res.status(200).json(result)
@@ -73,7 +74,7 @@ exports.edit=async(req,res,next)=>{
         }
     
     const eid=req.params.id
-    await Expense.update({where:{id:eid}})
+    await Expense.update({where:{id:eid,userId:req.user.id}})
     res.status(200)
 }catch(err){
     res.status(500).json({error:err})

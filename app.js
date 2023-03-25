@@ -15,6 +15,7 @@ app.use(cors())
 
 const routes=require('./route/user');
 const Expense = require('./models/expense');
+const User=require('./models/user')
 app.use(routes)
 
 

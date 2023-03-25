@@ -1,11 +1,13 @@
 
 async function savetolocal(event){
+     
         
         event.preventDefault()
         try{
         const amount=event.target.amount.value
         const description=event.target.description.value
         const category=event.target.category.value
+        
         // localStorage.setItem('name',name)
         // localStorage.setItem('email',email)
         // localStorage.setItem('phonenumber',phonenumber)
@@ -15,8 +17,9 @@ async function savetolocal(event){
             category
         }
         console.log('---------------in front')
+       const token= localStorage.getItem('token')
       
-       const data=await axios.post('http://localhost:3000/addexpense',obj)
+       const data=await axios.post('http://localhost:3000/addexpense',obj,{headers:{'Authorization':token}})
        console.log(data)
     const items=await data
     console.log(data)
@@ -28,7 +31,9 @@ async function savetolocal(event){
     async () => {
 
         try{
-        const data= await axios.get('http://localhost:3000/getexpense')
+            const token= localStorage.getItem('token')
+
+        const data= await axios.get('http://localhost:3000/getexpense',{headers:{'Authorization':token}})
         const response=await data
         console.log(response)
             for(var i =0; i< response.data.allExpense.length; i++){
@@ -53,8 +58,9 @@ async function savetolocal(event){
                    
    async function deleteuser(userId,amount){
     try{
-        
-       const data= await axios.delete(`http://localhost:3000/deleteexpense/${userId}`)
+            const token= localStorage.getItem('token')
+         
+       const data= await axios.delete(`http://localhost:3000/deleteexpense/${userId}`,{headers:{'Authorization':token}})
         const response=await data.data
             console.log(response,'------------------------res')
             console.log(userId,'------------------userid')
