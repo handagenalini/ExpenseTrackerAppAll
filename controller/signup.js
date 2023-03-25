@@ -38,10 +38,9 @@ exports.postsignup=async(req,res,next)=>{
         return res.status(500).json({error:err})
     }
 }
-// function generateAccessToken(id) {
-//     console.log('-----------------------------------')
-//     return jwt.sign(id ,process.env.TOKEN_SECRET);
-// }
+const generateAccessToken = (id, name) => {
+    return jwt.sign({ userId : id, name: name} ,'secretkey');
+}
 exports.login = (req, res) => {
     const { email, password } = req.body;
     console.log(password);
@@ -51,9 +50,8 @@ exports.login = (req, res) => {
                 if(err){
                     res.status(500).json({message:'somwthing went wrong'})
                 }
-                if(result){
-                
-                res.json({success: true, message: 'Successfully Logged In'})
+                if(result === true){
+                    return res.status(200).json({success: true, message: "User logged in successfully", token: generateAccessToken(user[0].id, user[0].name)})
                 }
                 // Send JWT
         
