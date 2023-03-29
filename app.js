@@ -15,12 +15,18 @@ app.use(cors())
 
 const routes=require('./route/user');
 const Expense = require('./models/expense');
+const Order=require('./models/order')
 const User=require('./models/user')
 app.use(routes)
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 
 User.hasMany(Expense)
 Expense.belongsTo(User)
+User.hasMany(Order)
+Order.belongsTo(User)
 
 sequelize.sync().then(()=>{
 // console.log(result)
