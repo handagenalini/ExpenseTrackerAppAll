@@ -1,32 +1,24 @@
 const User=require('../models/user')
 const Expense=require('../models/expense')
+const sequelize = require('../utils/database')
 
 exports.leaderboard=async(req,res,next)=>{
     try{
-const user=await User.findAll()
-const expense=await Expense.findAll()
-const useraggregatedexpenses={}
-expense.forEach(expense=>{
-    if(useraggregatedexpenses[expense.userId]){
-        useraggregatedexpenses[expense.userId]=useraggregatedexpenses[expense.userId]+expense.amount
-    }
-    else{
-        useraggregatedexpenses[expense.userId]=expense.amount
-    }
-  
+        console.log('in leaderboard')
+    const user=await User.findAll({
+        attributes: ['id', 'name',[sequelize.fn('sum', sequelize.col('expenses.amount')), 'total_cost'] ],
+        include: [
+            {
+                model: Expense,
+                attributes: []
+            }
+        ],
+        group:['user.id'],
+        order:[['total_cost', 'DESC']]
 
-})
-console.log(useraggregatedexpenses,'--------------------aggregated')
-userdetails=[]
-user.forEach(user=>{
-    userdetails.push({name:user.name,total_cost:useraggregatedexpenses[user.id]})
-})
-console.log(userdetails)
-userdetails.sort((a,b)=>{
-    return b.total_cost-a.total_cost
-})
-console.log(userdetails)
-res.status(200).json(userdetails)
+    })
+
+res.status(200).json(user)
     }catch(err){
         res.status(500).json({error:err})
     }
