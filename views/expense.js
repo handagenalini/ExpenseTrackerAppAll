@@ -27,12 +27,36 @@ async function savetolocal(event){
         
     }catch(err){console.log(err)}
     }
+    function showPremiumuserMessage() {
+        document.getElementById('buy premium').style.visibility = "hidden"
+        document.getElementById('message').innerHTML = "You are a premium user "
+    }
+    function parseJwt (token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    
+        return JSON.parse(jsonPayload);
+    }
+
 
     window.addEventListener("DOMContentLoaded", 
     async () => {
 
         try{
             const token= localStorage.getItem('token')
+            const decodetoken=parseJwt(token)
+            console.log(decodetoken)
+            const ispremiumuser=decodetoken.ispremiumuser
+        
+            console.log(ispremiumuser,'-----------------------------------------')
+            if(ispremiumuser){
+               showPremiumuserMessage()
+               showLeaderboard()
+               console.log('showlederboard')
+            }   
 
         const data= await axios.get('http://localhost:3000/getexpense',{headers:{'Authorization':token}})
         const response=await data
@@ -40,6 +64,7 @@ async function savetolocal(event){
             for(var i =0; i< response.data.allExpense.length; i++){
               showUserOnScreen(response.data.allExpense[i])
             }
+           
         }catch(err){
         console.log(err)
         }
@@ -136,7 +161,7 @@ async function savetolocal(event){
 document.getElementById('buy premium').onclick=async function(e){
     const token=localStorage.getItem('token')
     const response=await axios.get('http://localhost:3000/premium',{headers:{'Authorization':token}})
-    console.log(response)
+    console.log(response,"----------------------in update")
 var options=    {
     "key": response.data.key_id, // Enter the Key ID generated from the Dashboard
     "order_id": response.data.order.id,// For one time payment
@@ -147,14 +172,19 @@ var options=    {
             payment_id: response.razorpay_payment_id,
         }, { headers: {"Authorization" : token} })
        
-       console.log(res)
+       console.log(res,'\\\\\\\\\\\\\\\\\\\\\\\\')
         alert('You are a Premium User Now')
-        document.getElementById('rzp-button1').style.visibility = "hidden"
+        document.getElementById('buy premium').style.visibility = "hidden"
         document.getElementById('message').innerHTML = "You are a premium user "
         localStorage.setItem('token', res.data.token)
+    
+        // localStorage.setItem('ispremiumuser',res.data.ispremiumuser)
         showLeaderboard()
     },
  }
+
+
+ 
  const rzp1 = new Razorpay(options);
 rzp1.open();
 e.preventDefault();
@@ -164,4 +194,23 @@ rzp1.on('payment.failed', function (response){
   alert('Something went wrong')
 });
 }
-
+function showLeaderboard(){
+   
+    const inputElement = document.createElement("input")
+    inputElement.type = "button"
+    inputElement.value = 'Show Leaderboard'
+    inputElement.onclick = async() => {
+            const token = localStorage.getItem('token')
+            const userLeaderBoardArray = await axios.get('http://localhost:3000/showleaderboard', { headers: {"Authorization" : token} })
+            console.log(userLeaderBoardArray)
+    
+            var leaderboardElem = document.getElementById('leaderboard')
+            leaderboardElem.innerHTML += '<h1> Leader Board </<h1>'
+            userLeaderBoardArray.data.forEach((userDetails) => {
+                leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expense - ${userDetails.total_cost || 0} </li>`
+            })
+        }
+        document.getElementById("message").appendChild(inputElement);
+      
+    
+}

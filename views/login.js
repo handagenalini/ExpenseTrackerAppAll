@@ -11,7 +11,7 @@ async function login(e) {
     }
     console.log(loginDetails)
     await axios.post('http://localhost:3000/login',loginDetails).then(response => {
-        console.log('index1')
+        console.log(response,'---------------------------------------------login')
         if(response.status === 200){
             console.log('index')
             localStorage.setItem('token', response.data.token);

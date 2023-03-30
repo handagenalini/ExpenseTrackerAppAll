@@ -4,6 +4,7 @@ const signupcontroller=require('../controller/signup')
 const expensecontroller=require('../controller/expense')
 const authintication=require('../middleware/auth')
 const premiumcontroller=require('../controller/premium')
+const featurecontroller=require('../controller/prefeature')
 const router=express.Router()
 
 
@@ -20,5 +21,7 @@ router.delete('/editexpense/:id',authintication.authenticate, expensecontroller.
 
 router.get('/premium',authintication.authenticate,premiumcontroller.purchasepremium)
 router.post('/update',authintication.authenticate,premiumcontroller.updateTransactionStatus)
+
+router.get('/showleaderboard',authintication.authenticate,featurecontroller.leaderboard)
 
 module.exports=router
