@@ -75,9 +75,13 @@ exports.delete=async(req,res,next)=>{
         }
         const eid=req.params.id
         console.log(eid)
+        const resp= await Expense.findOne({
+            where:{id:eid},
+            transaction:t
+          })
         const result=await Expense.destroy({where:{id:eid,userId:req.user.id}},{transaction:t})
         console.log(result)
-        const totalexpense=Number(req.user.Totalexpense)-Number(amount)
+        const totalexpense=Number(req.user.Totalexpense)-Number(resp.amount)
         console.log(totalexpense)
       const update= await User.update({
             Totalexpense:totalexpense
