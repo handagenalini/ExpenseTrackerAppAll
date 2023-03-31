@@ -3,10 +3,12 @@ const path=require('path')
 const rootdir=require('../utils/path')
 const Expense=require('../models/expense')
 const User=require('../models/user')
+const sequelize=require('../utils/database')
 exports.getexpensepage = (req, res, next) => {
     res.sendFile(path.join(rootdir,'view','index.html'))
 }
 exports.addexpense=async(req,res,next)=>{
+    const t= await sequelize.transaction()
     console.log('-----------------inadd')
     
         if(!req.body.description){
@@ -19,29 +21,30 @@ const amount=req.body.amount
 const description=req.body.description
 const category=req.body.category
 
-await Expense.create({
-    amount:amount,
-    description:description,
-    category:category,
-    userId:req.user.id
-
-}).then(async (data)=>{
+const data=await Expense.create({
+    amount:amount,description:description,category:category, userId:req.user.id},{transaction:t})
+    try{
     console.log('in update')
     const totalexpense=Number(req.user.Totalexpense)+Number(amount)
     console.log(totalexpense)
-   await User.update({
+  const update= await User.update({
         Totalexpense:totalexpense
     },{
-        where:{id:req.user.id}
+        where:{id:req.user.id},
+        transaction:t
     }
-    ).then(async()=>{
+    )
+    try{
+        await t.commit()
         res.status(200).json({expense:data})
-    }).catch((err)=>{
+    }catch(err){
+        await t.rollback()
         res.status(500).json({success:false,error:err})
-    })
-}).catch((err)=>{
+    }
+}catch(err){
+    await t.rollback()
     res.status(500).json({success:false,error:err})
-})
+}
 }
 
     
@@ -62,6 +65,7 @@ exports.getexpense=async(req,res,next)=>{
 exports.delete=async(req,res,next)=>{
     console.log('-----------in delete')
     console.log(req.params.id)
+    const t=await sequelize.transaction()
     
     try{
         console.log(req.params.id)
@@ -71,11 +75,24 @@ exports.delete=async(req,res,next)=>{
         }
         const eid=req.params.id
         console.log(eid)
-        const result=await Expense.destroy({where:{id:eid,userId:req.user.id}})
+        const result=await Expense.destroy({where:{id:eid,userId:req.user.id}},{transaction:t})
         console.log(result)
+        const totalexpense=Number(req.user.Totalexpense)-Number(amount)
+        console.log(totalexpense)
+      const update= await User.update({
+            Totalexpense:totalexpense
+        },{
+            where:{id:req.user.id},
+            transaction:t
+        }
+        )
+    
+            await t.commit()
 
         res.status(200).json(result)
+        
     }catch(err){
+        await t.rollback()
         res.status(500).json({error:err})
     }
 
