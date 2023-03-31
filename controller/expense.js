@@ -2,12 +2,13 @@
 const path=require('path')
 const rootdir=require('../utils/path')
 const Expense=require('../models/expense')
+const User=require('../models/user')
 exports.getexpensepage = (req, res, next) => {
     res.sendFile(path.join(rootdir,'view','index.html'))
 }
 exports.addexpense=async(req,res,next)=>{
     console.log('-----------------inadd')
-    try{
+    
         if(!req.body.description){
             throw new Error("enter description")
         }
@@ -18,19 +19,33 @@ const amount=req.body.amount
 const description=req.body.description
 const category=req.body.category
 
-const data=await Expense.create({
+await Expense.create({
     amount:amount,
     description:description,
     category:category,
     userId:req.user.id
 
+}).then(async (data)=>{
+    console.log('in update')
+    const totalexpense=Number(req.user.Totalexpense)+Number(amount)
+    console.log(totalexpense)
+   await User.update({
+        Totalexpense:totalexpense
+    },{
+        where:{id:req.user.id}
+    }
+    ).then(async()=>{
+        res.status(200).json({expense:data})
+    }).catch((err)=>{
+        res.status(500).json({success:false,error:err})
+    })
+}).catch((err)=>{
+    res.status(500).json({success:false,error:err})
 })
-res.status(201).json({newExpense:data})
-}catch(err){
-console.log(err)
-res.status(500).json({error:err})
 }
-}
+
+    
+
 exports.getexpense=async(req,res,next)=>{
     try{
         

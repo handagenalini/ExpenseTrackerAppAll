@@ -23,5 +23,8 @@ router.get('/premium',authintication.authenticate,premiumcontroller.purchaseprem
 router.post('/update',authintication.authenticate,premiumcontroller.updateTransactionStatus)
 
 router.get('/showleaderboard',authintication.authenticate,featurecontroller.leaderboard)
+// router.get('/updateexpense',authintication.authenticate,featurecontroller.updateexpense)
+
+
 
 module.exports=router

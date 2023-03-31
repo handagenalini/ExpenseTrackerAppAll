@@ -202,12 +202,12 @@ function showLeaderboard(){
     inputElement.onclick = async() => {
             const token = localStorage.getItem('token')
             const userLeaderBoardArray = await axios.get('http://localhost:3000/showleaderboard', { headers: {"Authorization" : token} })
-            console.log(userLeaderBoardArray,'--------------------')
+            console.log(userLeaderBoardArray,'----------------------------')
     
             var leaderboardElem = document.getElementById('leaderboard')
             leaderboardElem.innerHTML += '<h1> Leader Board </<h1>'
             userLeaderBoardArray.data.forEach((userDetails) => {
-                leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expense - ${userDetails.total_cost || 0} </li>`
+                leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expense - ${userDetails.Totalexpense || 0} </li>`
             })
         }
         document.getElementById("message").appendChild(inputElement);
