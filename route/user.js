@@ -5,6 +5,7 @@ const expensecontroller=require('../controller/expense')
 const authintication=require('../middleware/auth')
 const premiumcontroller=require('../controller/premium')
 const featurecontroller=require('../controller/prefeature')
+const passwordcontroller=require('../controller/forgetpassword')
 const router=express.Router()
 
 
@@ -23,7 +24,13 @@ router.get('/premium',authintication.authenticate,premiumcontroller.purchaseprem
 router.post('/update',authintication.authenticate,premiumcontroller.updateTransactionStatus)
 
 router.get('/showleaderboard',authintication.authenticate,featurecontroller.leaderboard)
-// router.get('/updateexpense',authintication.authenticate,featurecontroller.updateexpense)
+
+router.post('/forgotpassword',passwordcontroller.forgotpassword)
+
+router.get('/resetpassword/:id', passwordcontroller.resetpassword)
+
+router.get('/updatepassword/:id', passwordcontroller.updatepassword)
+
 
 
 
