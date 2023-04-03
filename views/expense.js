@@ -52,6 +52,9 @@ async function savetolocal(event){
             const ispremiumuser=decodetoken.ispremiumuser
         
             console.log(ispremiumuser,'-----------------------------------------')
+            if(!ispremiumuser){
+                document.getElementById('download').style.visibility='hidden'
+            }
             if(ispremiumuser){
                showPremiumuserMessage()
                showLeaderboard()
@@ -213,4 +216,17 @@ function showLeaderboard(){
         document.getElementById("message").appendChild(inputElement);
       
     
+}
+function download(){
+console.log('---------------------------')
+document.getElementById('download').onclick=async()=>{
+    const data=await axios.get(`http://localhost:3000/download`)
+    console.log(data)
+    if(data.status==200){
+        document.body.innerHTML += '<div style="color:red;">file.downloaded Successfuly <div>'
+    }else{
+        console.log('something went wrong')
+    }
+
+}
 }
