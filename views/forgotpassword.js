@@ -4,9 +4,12 @@ async function password(e){
     const obj={
         email:email
     }
+    console.log(obj)
+    const token=localStorage.getItem('token')
+    console.log(token,'----------------------------------------')
     const data= await axios.post(`http://localhost:3000/forgotpassword`,obj)
     try{
-    if(response.status === 202){
+    if(data.status === 200){
         document.body.innerHTML += '<div style="color:red;">Mail Successfuly sent <div>'
     } else {
         throw new Error('Something went wrong!!!')

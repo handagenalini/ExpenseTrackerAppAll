@@ -4,6 +4,9 @@ const rootdir=require('../utils/path')
 const Expense=require('../models/expense')
 const User=require('../models/user')
 const sequelize=require('../utils/database')
+const Report=require('../models/report')
+const UserServices= require('../services/userservices');
+const S3Services= require('../services/s3services');
 exports.getexpensepage = (req, res, next) => {
     res.sendFile(path.join(rootdir,'view','index.html'))
 }
@@ -116,3 +119,42 @@ exports.edit=async(req,res,next)=>{
     res.status(500).json({error:err})
 }
 }
+
+
+exports.downloadExpense= async (req,res)=>{
+    console.log('-----------------------------in download expense')
+    try{
+     const expenses = await UserServices.getExpenses(req);          // if wanyt where u can add..to get sepcific expense using id
+     console.log(expenses)
+     const stringfiedExpense= JSON.stringify({expenses})
+     // each time while downloading i amgetting same file means overriding,,,so to download new we will use userid and date...
+     const userId= req.user.id;
+    
+     const filename=`expensesrahul${userId}/${new Date()}.txt`;            // added date and userId in file name... i will get new file when downloading...
+     const fileUrl = await S3Services.uploadToS3(stringfiedExpense, filename)            // since uploadToS3() is asyncronous task it will put call back quese moved to next line... i will get fileurl.. so i will do to wait for the task complete uploadToS3()..so i will use await with promise call back.. 
+     console.log(fileUrl);
+    
+     const report= await Report.create({
+                                       fileUrl:fileUrl,
+                                       userId:req.user.id
+     })
+     return res.status(200).json({fileUrl,response:report, success:true, message: "downloaded Successfully"})
+     
+    }catch(err){
+    console.log(err)
+    return res.status(500).json({fileUrl:'', success:false, message:'Failed', err:err})
+    }
+    
+    }
+    
+    exports.downloadHistory= async (req,res)=>{
+      try{
+        const download= await Report.findAll({where:{userId:req.user.id}})
+        res.status(200).json({success:true, downloadReport:download})
+    
+    }catch(err){
+      console.log(err)
+      return res.status(500).json({fileUrl:'', success:false, message:'Failed', err:err})
+      }
+      
+      }
