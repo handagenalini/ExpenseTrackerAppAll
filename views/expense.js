@@ -54,6 +54,8 @@ async function savetolocal(event){
             console.log(ispremiumuser,'-----------------------------------------')
             if(!ispremiumuser){
                 document.getElementById('download').style.visibility='hidden'
+                document.getElementById('downloadhistory').style.visibility='hidden'
+
             }
             if(ispremiumuser){
                showPremiumuserMessage()
@@ -220,9 +222,14 @@ function showLeaderboard(){
 function download(){
 console.log('---------------------------')
 document.getElementById('download').onclick=async()=>{
-    const data=await axios.get(`http://localhost:3000/download`)
-    console.log(data)
-    if(data.status==200){
+    const token=localStorage.getItem('token')
+    const data=await axios.get(`http://localhost:3000/download`,{headers:{'Authorization':token}})
+    console.log(data,'-------------------------')
+    if(data){
+    var a = document.createElement("a");
+    a.href=data.data.fileUrl;
+    a.download="myexpense.csv";
+    a.click();
         document.body.innerHTML += '<div style="color:red;">file.downloaded Successfuly <div>'
     }else{
         console.log('something went wrong')
@@ -230,3 +237,15 @@ document.getElementById('download').onclick=async()=>{
 
 }
 }
+function downloadhistory(){
+   document.getElementById('downloadhistory').onclick= async()=>{
+    const token=localStorage.getItem('token')
+    const response= await axios.get('http://localhost:3000/downloadHistory', {headers: {'Authorization': token}})
+    const parentElement = document.getElementById('listofreport');
+    parentElement.innerHTML='<h1>Dowload History</h1>'
+    response.data.downloadReport.forEach((userDownloadReport)=>{
+    parentElement.innerHTML+=`<li>url:<a href =${userDownloadReport.fileUrl}> report, click here download again</a> <br> Downloaded at ${userDownloadReport.createdAt}<br></li>`
+     })
+    }
+  
+  }

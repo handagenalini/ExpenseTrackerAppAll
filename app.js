@@ -18,6 +18,7 @@ const Expense = require('./models/expense');
 const Order=require('./models/order')
 const User=require('./models/user')
 const Forgotpassword=require('./models/forgetpassword')
+const Report = require('./models/report');
 app.use(routes)
 const dotenv = require('dotenv');
 
@@ -30,7 +31,8 @@ User.hasMany(Order)
 Order.belongsTo(User)
 User.hasMany(Forgotpassword)
 Forgotpassword.belongsTo(User)
-
+User.hasMany(Report);
+Report.belongsTo(User);
 sequelize.sync().then(()=>{
 // console.log(result)
     app.listen(3000)

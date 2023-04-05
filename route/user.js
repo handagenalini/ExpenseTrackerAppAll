@@ -18,6 +18,9 @@ router.post('/addexpense',authintication.authenticate,expensecontroller.addexpen
 router.get('/getexpense',authintication.authenticate, expensecontroller.getexpense)
 router.delete('/deleteexpense/:id', authintication.authenticate, expensecontroller.delete)
 router.delete('/editexpense/:id',authintication.authenticate, expensecontroller.edit)
+router.get('/download', authintication.authenticate, expensecontroller.downloadExpense);
+
+router.get('/downloadHistory', authintication.authenticate, expensecontroller.downloadHistory);
 
 
 router.get('/premium',authintication.authenticate,premiumcontroller.purchasepremium)
