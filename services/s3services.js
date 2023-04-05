@@ -2,8 +2,8 @@ const AWS=require('aws-sdk');
 
  exports.uploadToS3=(data,filename)=>{
     const bucket_name='expensetrackerappagain';
-    const iam_User_key="*************";
-    const secret_key="*************";
+    const iam_User_key="";
+    const secret_key="";
     
     
     let s3bucket= new AWS.S3({
