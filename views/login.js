@@ -24,7 +24,14 @@ async function login(e) {
     }).catch(err => {
         document.body.innerHTML += `<div style="color:red;">${err} <div>`;
     })
+   
 }
-// function forgotpassword() {
-//     window.location.href = "../ForgotPassword/index.html"
-// }
+
+// document.getElementById('btnpassword').onclick(()=>{
+//     window.location.href = "./forgotpassword.html"
+
+// })
+
+function forgotpassword() {
+    window.location.href = "./forgotpassword.html"
+}

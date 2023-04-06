@@ -22,8 +22,8 @@ async function savetolocal(event){
        const data=await axios.post('http://localhost:3000/addexpense',obj,{headers:{'Authorization':token}})
        console.log(data)
     const items=await data
-    console.log(data)
-        showUserOnScreen(items.data.newExpense)
+    console.log(data,'-------------------------------------')
+        showUserOnScreen(items.data.expense)
         
     }catch(err){console.log(err)}
     }
@@ -41,7 +41,9 @@ async function savetolocal(event){
         return JSON.parse(jsonPayload);
     }
 
-
+    let c = 0;
+    let cc = 1;
+    let pag = document.getElementById('pagination');
     window.addEventListener("DOMContentLoaded", 
     async () => {
 
@@ -49,27 +51,77 @@ async function savetolocal(event){
             const token= localStorage.getItem('token')
             const decodetoken=parseJwt(token)
             console.log(decodetoken)
+        const data= await axios.get(`http://localhost:3000/pagination?page=0`,{headers:{'Authorization':token}})
+console.log(data,'-----------------------------in pagination')
+console.log(data.data.Expenses.length,'-------------------------------')
             const ispremiumuser=decodetoken.ispremiumuser
         
             console.log(ispremiumuser,'-----------------------------------------')
+            if(!ispremiumuser){
+                document.getElementById('download').style.visibility='hidden'
+                document.getElementById('downloadhistory').style.visibility='hidden'
+
+            }
             if(ispremiumuser){
                showPremiumuserMessage()
                showLeaderboard()
                console.log('showlederboard')
             }   
 
-        const data= await axios.get('http://localhost:3000/getexpense',{headers:{'Authorization':token}})
-        const response=await data
-        console.log(response)
-            for(var i =0; i< response.data.allExpense.length; i++){
-              showUserOnScreen(response.data.allExpense[i])
-            }
+        // const response= await axios.get('http://localhost:3000/getexpense',{headers:{'Authorization':token}})
+
+        // console.log(response)
+        //     for(var i =0; i< response.data.allExpense.length; i++){
+        //       showUserOnScreen(response.data.allExpense[i])
+        //     }
            
         }catch(err){
         console.log(err)
         }
+        pagination()
              
             })
+function pagination(){
+                const token =localStorage.getItem('token');
+                  
+                axios.get("http://localhost:3000/getexpense" , { headers: {Authorization: token} })
+                  .then((expense)=>{
+                    console.log(expense.data,"expense in pagination function---")
+                    let number_of_pages;
+                    if(expense.data.allExpense.length % 2 == 0) {
+                       number_of_pages = Math.trunc(((expense.data.allExpense.length))/2)
+                    } else {
+                       number_of_pages = Math.trunc(((expense.data.allExpense.length))/2)+1
+                    }
+                   
+                    for (let i = 0; i < number_of_pages; i++) {
+                      pag.innerHTML += `<button class="pagebtn" id="?page=${c++}">${cc++}</button> `;
+                    }
+                  })
+                  .catch(err=> console.log(err))
+              
+              }
+pag.addEventListener('click', (e)=>{
+                let id = e.target.id;
+                console.log(id,"--this is id")
+                const token=localStorage.getItem('token')
+                axios.get(`http://localhost:3000/pagination${id}`, { headers: {Authorization: token} })
+                .then(expense=>{
+                  console.log("Add even listener",expense)
+                  let pagedata =expense.data.Expenses;
+                  const parentElement = document.getElementById('listOfUsers');
+                  parentElement.innerHTML=''
+                  // const parentElement = document.getElementById('pop');
+                  // const expenseElemId = `expense-${expense.id}`;
+                  // console.log("inside show expense")
+                  pagedata.forEach(expense => {
+                    console.log("Page data",expense)
+                    showUserOnScreen(expense);
+                })
+            })
+                .catch(err=> console.log(err))
+              
+              })
      function showUserOnScreen(user){
         
                     const parentNode=document.getElementById('listOfUsers')
@@ -214,3 +266,33 @@ function showLeaderboard(){
       
     
 }
+function download(){
+console.log('---------------------------')
+document.getElementById('download').onclick=async()=>{
+    const token=localStorage.getItem('token')
+    const data=await axios.get(`http://localhost:3000/download`,{headers:{'Authorization':token}})
+    console.log(data,'-------------------------')
+    if(data){
+    var a = document.createElement("a");
+    a.href=data.data.fileUrl;
+    a.download="myexpense.csv";
+    a.click();
+        document.body.innerHTML += '<div style="color:red;">file.downloaded Successfuly <div>'
+    }else{
+        console.log('something went wrong')
+    }
+
+}
+}
+function downloadhistory(){
+   document.getElementById('downloadhistory').onclick= async()=>{
+    const token=localStorage.getItem('token')
+    const response= await axios.get('http://localhost:3000/downloadHistory', {headers: {'Authorization': token}})
+    const parentElement = document.getElementById('listofreport');
+    parentElement.innerHTML='<h1>Dowload History</h1>'
+    response.data.downloadReport.forEach((userDownloadReport)=>{
+    parentElement.innerHTML+=`<li>url:<a href =${userDownloadReport.fileUrl}> report, click here download again</a> <br> Downloaded at ${userDownloadReport.createdAt}<br></li>`
+     })
+    }
+  
+  }

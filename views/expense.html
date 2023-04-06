@@ -34,7 +34,17 @@
 <ul id="listOfUsers"></ul>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 <h4 id="add"></h4>
+
+    <div id="pagination"></div><br><br>
+    <input id="limit" type="number">
+    <button onclick="setLimit(event)">set per page expense </button>
+</div>
 <ul id="leaderboard"></ul>
-<script src="expense.js"></script>   
+<button onclick="download()" id="download">Download File</button>
+<button onclick="downloadhistory()" id="downloadhistory">Download File History</button>
+<ul id="listofreport"></ul>
+
+
+<script src="expense.js"></script> 
 </body>
 </html>
