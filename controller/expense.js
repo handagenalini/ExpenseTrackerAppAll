@@ -52,12 +52,16 @@ const data=await Expense.create({
 exports.pagination=async (req,res,next)=>{
     console.log('in pagination---------------')
 const pagenumber=req.query.page
-const Limit=2
+
+const Limit=req.query.limit
+console.log(Limit)
+const limit=parseInt(Limit)
+console.log(limit,'-----------------')
 
 // const startIndex=(pagenumber-1)*limit
 // const endIndex=pagenumber*limit
 
-await Expense.findAll({where:{userId:req.user.id},limit:2,offset:Limit*pagenumber})
+await Expense.findAll({where:{userId:req.user.id},limit:limit,offset:limit*pagenumber})
 .then(
     expense => {return res.json({Expenses:expense , success:true,user:req.user})
 })

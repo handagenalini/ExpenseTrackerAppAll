@@ -51,7 +51,9 @@ async function savetolocal(event){
             const token= localStorage.getItem('token')
             const decodetoken=parseJwt(token)
             console.log(decodetoken)
-        const data= await axios.get(`http://localhost:3000/pagination?page=0`,{headers:{'Authorization':token}})
+            
+            const limit=localStorage.getItem('limit')
+        const data= await axios.get(`http://localhost:3000/pagination?page=0&limit=${limit}`,{headers:{'Authorization':token}})
 console.log(data,'-----------------------------in pagination')
 console.log(data.data.Expenses.length,'-------------------------------')
             const ispremiumuser=decodetoken.ispremiumuser
@@ -83,15 +85,16 @@ console.log(data.data.Expenses.length,'-------------------------------')
             })
 function pagination(){
                 const token =localStorage.getItem('token');
+                const limit=localStorage.getItem('limit')
                   
                 axios.get("http://localhost:3000/getexpense" , { headers: {Authorization: token} })
                   .then((expense)=>{
                     console.log(expense.data,"expense in pagination function---")
                     let number_of_pages;
-                    if(expense.data.allExpense.length % 2 == 0) {
-                       number_of_pages = Math.trunc(((expense.data.allExpense.length))/2)
+                    if(expense.data.allExpense.length % limit == 0) {
+                       number_of_pages = Math.trunc(((expense.data.allExpense.length))/limit)
                     } else {
-                       number_of_pages = Math.trunc(((expense.data.allExpense.length))/2)+1
+                       number_of_pages = Math.trunc(((expense.data.allExpense.length))/limit)+1
                     }
                    
                     for (let i = 0; i < number_of_pages; i++) {
@@ -101,11 +104,19 @@ function pagination(){
                   .catch(err=> console.log(err))
               
               }
+async function setlimit(e){
+    e.preventDefault()
+    const limit=e.target.limit.value
+    console.log(limit,'-------------------')
+    localStorage.setItem('limit',limit)
+
+}
 pag.addEventListener('click', (e)=>{
                 let id = e.target.id;
                 console.log(id,"--this is id")
                 const token=localStorage.getItem('token')
-                axios.get(`http://localhost:3000/pagination${id}`, { headers: {Authorization: token} })
+                const Limit=localStorage.getItem('limit')
+                axios.get(`http://localhost:3000/pagination${id}&limit=${Limit}`, { headers: {Authorization: token} })
                 .then(expense=>{
                   console.log("Add even listener",expense)
                   let pagedata =expense.data.Expenses;

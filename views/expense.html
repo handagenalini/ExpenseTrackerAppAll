@@ -36,8 +36,10 @@
 <h4 id="add"></h4>
 
     <div id="pagination"></div><br><br>
+    <form onsubmit="setlimit(event)">
     <input id="limit" type="number">
-    <button onclick="setLimit(event)">set per page expense </button>
+    <button id="btn1">set per page expense </button>
+    </form>
 </div>
 <ul id="leaderboard"></ul>
 <button onclick="download()" id="download">Download File</button>
