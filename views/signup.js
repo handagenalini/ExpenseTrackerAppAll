@@ -13,7 +13,7 @@ async function signup(e){
  
     const data= await axios.post(`http://localhost:3000/add`,obj).then(response=>{
     console.log('-----------------in add')
-    // console.log(data)
+
 
         console.log('this is script axios');
         console.log(response)
