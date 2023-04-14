@@ -10,7 +10,7 @@ async function login(e) {
 
     }
     console.log(loginDetails)
-    await axios.post('http://localhost:3000/login',loginDetails).then(response => {
+    await axios.post('http://43.207.218.246:3000/login',loginDetails).then(response => {
         console.log(response,'---------------------------------------------login')
         if(response.status === 200){
             console.log('index')

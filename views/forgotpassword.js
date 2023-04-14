@@ -7,7 +7,7 @@ async function password(e){
     console.log(obj)
     const token=localStorage.getItem('token')
     console.log(token,'----------------------------------------')
-    const data= await axios.post(`http://localhost:3000/forgotpassword`,obj)
+    const data= await axios.post(`http://43.207.218.246:3000/forgotpassword`,obj)
     try{
     if(data.status === 200){
         document.body.innerHTML += '<div style="color:red;">Mail Successfuly sent <div>'

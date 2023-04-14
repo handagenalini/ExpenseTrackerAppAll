@@ -11,7 +11,7 @@ async function signup(e){
         password:password
     }
  
-    const data= await axios.post(`http://localhost:3000/add`,obj).then(response=>{
+    const data= await axios.post(`http://43.207.218.246:3000/add`,obj).then(response=>{
     console.log('-----------------in add')
 
 
