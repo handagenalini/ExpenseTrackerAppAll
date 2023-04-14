@@ -4,10 +4,10 @@ const bcrypt=require('bcrypt')
 const rootdir=require('../utils/path')
 const User=require('../models/user')
 const jwt=require('jsonwebtoken')
-exports.getsignuppage = (req, res, next) => {
-    console.log("-------------------------")
-    res.sendFile(path.join(rootdir,'views','signup.html'))
-}
+// exports.getsignuppage = (req, res, next) => {
+//     console.log("-------------------------")
+//     res.sendFile(path.join(rootdir,'views','signup.html'))
+// }
 exports.postsignup=async(req,res,next)=>{
     console.log("-------------------------1signup")
 
