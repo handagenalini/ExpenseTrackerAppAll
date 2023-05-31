@@ -38,7 +38,7 @@ apiKey.apiKey = process.env.API_KEY;
 // create a transactional email message
 let sendSmtpEmail = new Sib.SendSmtpEmail();
 sendSmtpEmail.to = [{ "email": email }];
-sendSmtpEmail.sender = { "email": "nalinihandage@gmail.com", "name": "nalini" };
+sendSmtpEmail.sender = { "email": "abrarquraishi96@gmail.com", "name": "nalini" };
 sendSmtpEmail.subject = "Reset-Password";
 sendSmtpEmail.textContent = "Hey Click below to reset Your Password";
 sendSmtpEmail.htmlContent = `<form onsubmit="submitPass(event)" ><a href="http://localhost:3000/resetpassword/${id}">Reset Password</a></form>`;

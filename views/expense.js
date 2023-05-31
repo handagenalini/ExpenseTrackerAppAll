@@ -19,7 +19,7 @@ async function savetolocal(event){
         console.log('---------------in front')
        const token= localStorage.getItem('token')
       
-       const data=await axios.post('http://43.207.218.246:3000/addexpense',obj,{headers:{'Authorization':token}})
+       const data=await axios.post('http://localhost:3000/addexpense',obj,{headers:{'Authorization':token}})
        console.log(data)
     const items=await data
     console.log(data,'-------------------------------------')
@@ -41,7 +41,7 @@ async function savetolocal(event){
         return JSON.parse(jsonPayload);
     }
 
-    let c = 0;
+    let c = 1;
     let cc = 1;
     let pag = document.getElementById('pagination');
     window.addEventListener("DOMContentLoaded", 
@@ -50,10 +50,10 @@ async function savetolocal(event){
         try{
             const token= localStorage.getItem('token')
             const decodetoken=parseJwt(token)
-            console.log(decodetoken)
+            console.log(decodetoken,'=============================================')
             
             const limit=localStorage.getItem('limit')
-        const data= await axios.get(`http://43.207.218.246:3000/pagination?page=0&limit=${limit}`,{headers:{'Authorization':token}})
+        const data= await axios.get(`http://localhost:3000/pagination?page=1&limit=${limit}`,{headers:{'Authorization':token}})
 console.log(data,'-----------------------------in pagination')
 console.log(data.data.Expenses.length,'-------------------------------')
             const ispremiumuser=decodetoken.ispremiumuser
@@ -87,7 +87,7 @@ function pagination(){
                 const token =localStorage.getItem('token');
                 const limit=localStorage.getItem('limit')
                   
-                axios.get("http://43.207.218.246:3000/getexpense" , { headers: {Authorization: token} })
+                axios.get("http://localhost:3000/getexpense" , { headers: {Authorization: token} })
                   .then((expense)=>{
                     console.log(expense.data,"expense in pagination function---")
                     let number_of_pages;
@@ -113,10 +113,11 @@ async function setlimit(e){
 }
 pag.addEventListener('click', (e)=>{
                 let id = e.target.id;
+                console.log('=================================================================================')
                 console.log(id,"--this is id")
                 const token=localStorage.getItem('token')
                 const Limit=localStorage.getItem('limit')
-                axios.get(`http://43.207.218.246:3000/pagination${id}&limit=${Limit}`, { headers: {Authorization: token} })
+                axios.get(`http://localhost:3000/pagination${id}&limit=${Limit}`, { headers: {Authorization: token} })
                 .then(expense=>{
                   console.log("Add even listener",expense)
                   let pagedata =expense.data.Expenses;
@@ -137,9 +138,9 @@ pag.addEventListener('click', (e)=>{
         
                     const parentNode=document.getElementById('listOfUsers')
                     
-                    const childHTML=`<li id=${user.id}> ${user.amount}-----${user.description}--------${user.category}  
-                        <button onclick=deleteuser('${user.id}','${user.amount}')> delete user</button>
-                        <button onclick=edituser('${user.description}','${user.amount}','${user.category}','${user.id}')>edit user</button></li>`
+                    const childHTML=`<li id=${user._id}> ${user.amount}-----${user.description}--------${user.category}  
+                        <button onclick=deleteuser('${user._id}','${user.amount}')> delete user</button>
+                        <button onclick=edituser('${user.description}','${user.amount}','${user.category}','${user._id}')>edit user</button></li>`
 
                         parentNode.innerHTML=parentNode.innerHTML+childHTML
                         addition(user.amount)
@@ -149,7 +150,7 @@ pag.addEventListener('click', (e)=>{
     try{
             const token= localStorage.getItem('token')
          
-       const data= await axios.delete(`http://43.207.218.246:3000/deleteexpense/${userId}`,{headers:{'Authorization':token}})
+       const data= await axios.delete(`http://localhost:3000/deleteexpense/${userId}`,{headers:{'Authorization':token}})
         const response=await data.data
             console.log(response,'------------------------res')
             console.log(userId,'------------------userid')
@@ -197,9 +198,9 @@ pag.addEventListener('click', (e)=>{
      const parentNode=document.getElementById('add')
 
             
-                    const childHTML=`<h4>Total Expences ${prev}</h4>`
+                    // const childHTML=`<h4>Total Expences ${prev}</h4>`
 
-                    parentNode.innerHTML=childHTML
+                    // parentNode.innerHTML=childHTML
                    
         // function minus(userId){
         // const newamount=prev-user.amount
@@ -215,22 +216,22 @@ pag.addEventListener('click', (e)=>{
         console.log(prev)
         console.log(newamount)
 
-        const childHTML=`<h4>Total Expences ${newamount} $</h4>`
-        parentNode.innerHTML=childHTML
-        console.log(childHTML)
+        // const childHTML=`<h4>Total Expences ${newamount} $</h4>`
+        // parentNode.innerHTML=childHTML
+        // console.log(childHTML)
 
     }
     
 document.getElementById('buy premium').onclick=async function(e){
     const token=localStorage.getItem('token')
-    const response=await axios.get('http://43.207.218.246:3000/premium',{headers:{'Authorization':token}})
+    const response=await axios.get('http://localhost:3000/premium',{headers:{'Authorization':token}})
     console.log(response,"----------------------in update")
 var options=    {
     "key": response.data.key_id, // Enter the Key ID generated from the Dashboard
     "order_id": response.data.order.id,// For one time payment
     // This handler function will handle the success payment
     "handler": async function (response) {
-       const res = await axios.post('http://43.207.218.246:3000/update',{
+       const res = await axios.post('http://localhost:3000/update',{
             order_id: options.order_id,
             payment_id: response.razorpay_payment_id,
         }, { headers: {"Authorization" : token} })
@@ -264,7 +265,7 @@ function showLeaderboard(){
     inputElement.value = 'Show Leaderboard'
     inputElement.onclick = async() => {
             const token = localStorage.getItem('token')
-            const userLeaderBoardArray = await axios.get('http://43.207.218.246:3000/showleaderboard', { headers: {"Authorization" : token} })
+            const userLeaderBoardArray = await axios.get('http://localhost:3000/showleaderboard', { headers: {"Authorization" : token} })
             console.log(userLeaderBoardArray,'----------------------------')
     
             var leaderboardElem = document.getElementById('leaderboard')
@@ -281,7 +282,7 @@ function download(){
 console.log('---------------------------')
 document.getElementById('download').onclick=async()=>{
     const token=localStorage.getItem('token')
-    const data=await axios.get(`http://43.207.218.246:3000/download`,{headers:{'Authorization':token}})
+    const data=await axios.get(`http://localhost:3000/download`,{headers:{'Authorization':token}})
     console.log(data,'-------------------------')
     if(data){
     var a = document.createElement("a");
@@ -298,7 +299,7 @@ document.getElementById('download').onclick=async()=>{
 function downloadhistory(){
    document.getElementById('downloadhistory').onclick= async()=>{
     const token=localStorage.getItem('token')
-    const response= await axios.get('http://43.207.218.246:3000/downloadHistory', {headers: {'Authorization': token}})
+    const response= await axios.get('http://localhost:3000/downloadHistory', {headers: {'Authorization': token}})
     const parentElement = document.getElementById('listofreport');
     parentElement.innerHTML='<h1>Dowload History</h1>'
     response.data.downloadReport.forEach((userDownloadReport)=>{

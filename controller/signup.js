@@ -1,13 +1,10 @@
 
-const path=require('path')
+
 const bcrypt=require('bcrypt')
-const rootdir=require('../utils/path')
+
 const User=require('../models/user')
 const jwt=require('jsonwebtoken')
-// exports.getsignuppage = (req, res, next) => {
-//     console.log("-------------------------")
-//     res.sendFile(path.join(rootdir,'views','signup.html'))
-// }
+
 exports.postsignup=async(req,res,next)=>{
     console.log("-------------------------1signup")
 
@@ -45,15 +42,15 @@ exports.login = (req, res) => {
     const { email, password } = req.body;
 
     console.log(password);
-    User.findAll({ where : { email }}).then(user => {
-        if(user.length > 0){
-            bcrypt.compare(password,user[0].password,(err,result)=> {
+    User.findOne({ email }).then(user => {
+        
+            bcrypt.compare(password,user.password,(err,result)=> {
                 if(err){
                     res.status(500).json({message:'somwthing went wrong'})
                 }
                 if(result === true){
-                    console.log(user[0].ispremiumuser,'------------------------------------------')
-                    return res.status(200).json({success: true, message: "User logged in successfully", token: generateAccessToken(user[0].id, user[0].name,user[0].ispremiumuser)})
+                    console.log(user.ispremiumuser,'------------------------------------------')
+                    return res.status(200).json({success: true, message: "User logged in successfully", token: generateAccessToken(user._id, user.name,user.ispremiumuser)})
                 }
                 // Send JWT
         
@@ -63,8 +60,6 @@ exports.login = (req, res) => {
                 }
             })
             
-        } else {
-            return res.status(404).json({success: false, message: 'passwords do not match'})
-        }
+      
     })
 }
