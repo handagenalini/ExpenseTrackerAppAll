@@ -22,10 +22,10 @@
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^5.5.0",
     "mongoose": "^7.2.1",
-    "mysql2": "^3.2.0",
+    "mysql2": "^3.4.1",
     "nodemon": "^2.0.22",
     "razorpay": "^2.8.6",
-    "sequelize": "^6.29.3",
+    "sequelize": "^6.32.1",
     "sib-api-v3-sdk": "^8.5.0",
     "uuid": "^9.0.0"
   }

@@ -96,9 +96,9 @@ function pagination(){
                     } else {
                        number_of_pages = Math.trunc(((expense.data.allExpense.length))/limit)+1
                     }
-                   
+                //    pag.innerHTML=`<br>`
                     for (let i = 0; i < number_of_pages; i++) {
-                      pag.innerHTML += `<button class="pagebtn" id="?page=${c++}">${cc++}</button> `;
+                      pag.innerHTML += `<button class="btn btn-outline-primary" id="?page=${c++}">${cc++}</button> `;
                     }
                   })
                   .catch(err=> console.log(err))
@@ -139,8 +139,8 @@ pag.addEventListener('click', (e)=>{
                     const parentNode=document.getElementById('listOfUsers')
                     
                     const childHTML=`<li id=${user._id}> ${user.amount}-----${user.description}--------${user.category}  
-                        <button onclick=deleteuser('${user._id}','${user.amount}')> delete user</button>
-                        <button onclick=edituser('${user.description}','${user.amount}','${user.category}','${user._id}')>edit user</button></li>`
+                        <button onclick=deleteuser('${user._id}','${user.amount}') class="btn btn-primary"> delete user</button>
+                        <button onclick=edituser('${user.description}','${user.amount}','${user.category}','${user._id}') class="btn btn-primary">edit user</button></li><br>`
 
                         parentNode.innerHTML=parentNode.innerHTML+childHTML
                         addition(user.amount)
@@ -263,6 +263,7 @@ function showLeaderboard(){
     const inputElement = document.createElement("input")
     inputElement.type = "button"
     inputElement.value = 'Show Leaderboard'
+    inputElement.className='btn btn-primary'
     inputElement.onclick = async() => {
             const token = localStorage.getItem('token')
             const userLeaderBoardArray = await axios.get('http://localhost:3000/showleaderboard', { headers: {"Authorization" : token} })

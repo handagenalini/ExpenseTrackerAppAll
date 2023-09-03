@@ -8,12 +8,18 @@ const sequelize = require('../utils/database')
 exports.leaderboard=async(req,res,next)=>{
     try{
         console.log('in leaderboard')
-   
-    const user = await User.aggregate([
-        {
-          $sort: { Totalexpense: -1 } // Sort by Totalexpense in descending order
-        }
-      ]);
+    const user=await User.findAll({
+        // attributes: ['id', 'name',[sequelize.fn('sum', sequelize.col('expenses.amount')), 'total_cost'] ],
+        // include: [
+        //     {
+        //         model: Expense,
+        //         attributes: []
+        //     }
+        // ],
+        // group:['user.id'],
+        order:[['Totalexpense', 'DESC']]
+
+    })
     // console.log(user)
 
 return res.status(200).json(user)

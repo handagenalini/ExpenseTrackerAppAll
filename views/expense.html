@@ -5,46 +5,73 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+
 </head>
 <body>
-    <h4>EXPENCE TRACKER</h4>
+    <div class="container">
+        <h4>EXPENCE TRACKER</h4>
     
-    <form onsubmit="savetolocal(event)">
-    <label for="amount">Amount</label>
-    <input id='amount'type="number" name="amount">
-    <label for="description">description</label>
-    <input id='description'type="text" name="description">
-    <label for="category">Choose category</label>
-    
-    <select id="category" name="category">
-        <option value="fuel">fuel</option>
-        <option value="food">food</option>
-        <option value="electricity">electricity</option>
-        <option value="Movie">Movie</option>
-    </select>
-   
-    <button>add expence</button>
+        <form onsubmit="savetolocal(event)">
+            <div class="md-3">
+                <label for="amount"class="form-label">Amount</label>
+                <input id='amount'type="number" class="form-control" name="amount">
+            </div>
+            <div class="md-3">
+                <label for="description" class="form-label">description</label>
+                <input id='description'type="text" class="form-control" name="description">
+            </div>
+            <div class="md-3">
+                <label for="category" class="form-label">Choose category</label>
+                
+                <select id="category"  class="form-control" name="category">
+                    <option value="fuel">fuel</option>
+                    <option value="food">food</option>
+                    <option value="electricity">electricity</option>
+                    <option value="Movie">Movie</option>
+                </select>
+            </div>
+            <br>
+        
+            <button class="btn btn-danger">add expence</button>
 
-</form>
-<button id="buy premium">buy premium</button>
-
-<h4 id="message"></h4>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<h4 id="product" >Daily Expences</h4>
-<ul id="listOfUsers"></ul>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
-<h4 id="add"></h4>
-
-    <div id="pagination"></div><br><br>
-    <form onsubmit="setlimit(event)">
-    <input id="limit" type="number">
-    <button id="btn1">set per page expense </button>
-    </form>
+        </form>
 </div>
-<ul id="leaderboard"></ul>
-<button onclick="download()" id="download">Download File</button>
-<button onclick="downloadhistory()" id="downloadhistory">Download File History</button>
-<ul id="listofreport"></ul>
+<br>
+<div class="container">
+    <button id="buy premium" class="btn btn-danger">buy premium</button>
+
+    <div class="text">
+        <h4 id="message"></h4>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <div class="container">
+        <h4 id="product" >Daily Expences</h4>
+        <ul id="listOfUsers"></ul>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+ 
+    <h4 id="add"></h4>
+
+        <div id="pagination"><br><br>
+        <form onsubmit="setlimit(event)">
+        <input id="limit" class="form-control"type="number">
+        <br>
+        <button id="btn1" class="btn btn-primary">set per page expense </button>
+        
+        </form>
+        <br>
+    </div>
+    </div>
+
+
+    <ul id="leaderboard"></ul>
+    <button onclick="download()" class="btn btn-primary"id="download">Download File</button>
+    <button onclick="downloadhistory()" class="btn btn-primary" id="downloadhistory">Download File History</button>
+    <ul id="listofreport"></ul>
+</div>
+
+
 
 
 <script src="expense.js"></script> 

@@ -13,13 +13,11 @@ const purchasepremium=async(req,res,next)=>{
         const amount=100
         rzp.orders.create({amount,currency:'INR'},(err,order)=>{
             if(err){
-                console.log(err)
                 throw new Error(JSON.stringify(err))
             }
-        Order.create({orderid:order.id,status:'pending',userId:req.user.id}).then(()=>{
+            req.user.createOrder({orderid:order.id,status:'pending'}).then(()=>{
                 return res.status(201).json({order,key_id:rzp.key_id})
             }).catch((err)=>{
-                console.log(err)
                 throw new Error(err)
 
             })
@@ -38,10 +36,9 @@ const generateAccessToken = (id, name,ispremiumuser) => {
         console.log('--------------------------------------------in update')
         const userId = req.user.id;
         const { payment_id, order_id} = req.body;
-        console.log(payment_id,order_id)
-        const order  = await Order.findOne({orderid : order_id}) //2
-        const promise1 =  order.updateOne({ paymentid: payment_id, status: 'SUCCESSFUL'}) 
-        const promise2 =  req.user.updateOne({ ispremiumuser: true }) 
+        const order  = await Order.findOne({where : {orderid : order_id}}) //2
+        const promise1 =  order.update({ paymentid: payment_id, status: 'SUCCESSFUL'}) 
+        const promise2 =  req.user.update({ ispremiumuser: true }) 
 
         Promise.all([promise1, promise2]).then(()=> {
             return res.status(202).json({sucess: true, message: "Transaction Successful", token:generateAccessToken(userId,undefined ,true)});
